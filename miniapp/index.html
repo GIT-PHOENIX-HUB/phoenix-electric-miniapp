@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Phoenix Electric</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- SPLASH / HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="hero">
+        <div class="logo-container">
+          <div class="phoenix-emblem">
+            <svg viewBox="0 0 120 120" class="phoenix-svg">
+              <defs>
+                <linearGradient id="fireGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#FF1A1A"/>
+                  <stop offset="50%" style="stop-color:#D4AF37"/>
+                  <stop offset="100%" style="stop-color:#FF1A1A"/>
+                </linearGradient>
+              </defs>
+              <path d="M60 10 C45 30, 25 45, 30 70 C32 80, 40 90, 50 95 C42 85, 40 70, 50 55 C55 65, 52 80, 55 95 C58 98, 62 98, 65 95 C68 80, 65 65, 70 55 C80 70, 78 85, 70 95 C80 90, 88 80, 90 70 C95 45, 75 30, 60 10Z" fill="url(#fireGrad)" class="phoenix-flame"/>
+              <circle cx="52" cy="62" r="2" fill="#0a0a0a"/>
+              <circle cx="68" cy="62" r="2" fill="#0a0a0a"/>
+            </svg>
+          </div>
+          <h1 class="brand-name">PHOENIX ELECTRIC</h1>
+          <p class="brand-tagline">Authorized Generac Dealer &bull; Licensed &bull; Insured</p>
+        </div>
+      </div>
+      <div class="home-actions">
+        <button class="action-btn primary" onclick="navigateTo('service-request')">
+          <span class="btn-icon">&#9889;</span>
+          <span class="btn-text">
+            <strong>Request Service</strong>
+            <small>Electrical work, repairs, installs</small>
+          </span>
+          <span class="btn-arrow">&rsaquo;</span>
+        </button>
+        <button class="action-btn gold" onclick="navigateTo('generator-sizing')">
+          <span class="btn-icon">&#9879;</span>
+          <span class="btn-text">
+            <strong>Size My Generator</strong>
+            <small>Find the right Generac for your home</small>
+          </span>
+          <span class="btn-arrow">&rsaquo;</span>
+        </button>
+        <button class="action-btn secondary" onclick="navigateTo('maintenance')">
+          <span class="btn-icon">&#128295;</span>
+          <span class="btn-text">
+            <strong>Generator Maintenance</strong>
+            <small>Annual service, batteries, WiFi</small>
+          </span>
+          <span class="btn-arrow">&rsaquo;</span>
+        </button>
+        <button class="action-btn outline" onclick="navigateTo('about')">
+          <span class="btn-icon">&#9737;</span>
+          <span class="btn-text">
+            <strong>About Phoenix Electric</strong>
+            <small>Licenses, service area, contact</small>
+          </span>
+          <span class="btn-arrow">&rsaquo;</span>
+        </button>
+      </div>
+      <div class="home-footer">
+        <p>Colorado Licensed #101501 &bull; 10+ Jurisdictions</p>
+        <p>Denver Metro &bull; Northern Colorado</p>
+      </div>
+    </div>
+
+    <!-- SERVICE REQUEST SCREEN -->
+    <div id="screen-service-request" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" onclick="navigateTo('home')">&larr;</button>
+        <h2>Request Service</h2>
+      </div>
+      <div class="screen-body">
+        <div class="form-group">
+          <label>What do you need?</label>
+          <div class="category-grid">
+            <button class="cat-btn" data-cat="lighting" onclick="selectCategory(this)">
+              <span class="cat-icon">&#128161;</span>
+              <span>Lighting</span>
+            </button>
+            <button class="cat-btn" data-cat="circuits" onclick="selectCategory(this)">
+              <span class="cat-icon">&#9889;</span>
+              <span>Circuits</span>
+            </button>
+            <button class="cat-btn" data-cat="panels" onclick="selectCategory(this)">
+              <span class="cat-icon">&#9878;</span>
+              <span>Panel / Service</span>
+            </button>
+            <button class="cat-btn" data-cat="devices" onclick="selectCategory(this)">
+              <span class="cat-icon">&#128268;</span>
+              <span>Outlets / Switches</span>
+            </button>
+            <button class="cat-btn" data-cat="generators" onclick="selectCategory(this)">
+              <span class="cat-icon">&#9879;</span>
+              <span>Generator</span>
+            </button>
+            <button class="cat-btn" data-cat="specialty" onclick="selectCategory(this)">
+              <span class="cat-icon">&#11088;</span>
+              <span>Specialty / EV</span>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>How urgent is this?</label>
+          <div class="urgency-row">
+            <button class="urgency-btn" data-urgency="emergency" onclick="selectUrgency(this)">
+              <span class="urgency-dot emergency"></span> Emergency
+            </button>
+            <button class="urgency-btn" data-urgency="soon" onclick="selectUrgency(this)">
+              <span class="urgency-dot soon"></span> This Week
+            </button>
+            <button class="urgency-btn" data-urgency="flexible" onclick="selectUrgency(this)">
+              <span class="urgency-dot flexible"></span> Flexible
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Property Type</label>
+          <div class="urgency-row">
+            <button class="urgency-btn" data-prop="residential" onclick="selectProperty(this)">
+              &#127968; Residential
+            </button>
+            <button class="urgency-btn" data-prop="commercial" onclick="selectProperty(this)">
+              &#127970; Commercial
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tell us more (optional)</label>
+          <textarea id="service-notes" placeholder="Describe the issue or what you need done..." rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="service-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="service-phone" placeholder="(720) 555-0000">
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="service-address" placeholder="Street address, city">
+          <button class="location-btn" onclick="shareLocation()">
+            &#128205; Use My Location
+          </button>
+        </div>
+        <button class="submit-btn" onclick="submitServiceRequest()">
+          Submit Request &#10148;
+        </button>
+      </div>
+    </div>
+
+    <!-- GENERATOR SIZING SCREEN -->
+    <div id="screen-generator-sizing" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" onclick="navigateTo('home')">&larr;</button>
+        <h2>Size My Generator</h2>
+      </div>
+      <div class="screen-body">
+        <p class="section-intro">Answer a few questions and we'll recommend the perfect Generac Guardian for your home.</p>
+        <div class="form-group">
+          <label>Home Size (approx. sq ft)</label>
+          <div class="size-options">
+            <button class="size-btn" data-sqft="1500" onclick="selectSize(this)">Under 1,500</button>
+            <button class="size-btn" data-sqft="2000" onclick="selectSize(this)">1,500 – 2,500</button>
+            <button class="size-btn" data-sqft="3000" onclick="selectSize(this)">2,500 – 3,500</button>
+            <button class="size-btn" data-sqft="4000" onclick="selectSize(this)">3,500 – 4,500</button>
+            <button class="size-btn" data-sqft="5000" onclick="selectSize(this)">4,500+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What must stay on during an outage?</label>
+          <p class="helper-text">Select all that apply — we'll calculate your load.</p>
+          <div class="circuit-grid">
+            <label class="circuit-item"><input type="checkbox" value="3500" data-label="Central AC (3-ton)"> <span class="circuit-check"></span> Central A/C</label>
+            <label class="circuit-item"><input type="checkbox" value="5000" data-label="Central AC (5-ton)"> <span class="circuit-check"></span> Large A/C (5-ton)</label>
+            <label class="circuit-item"><input type="checkbox" value="4500" data-label="Electric Furnace/Heat"> <span class="circuit-check"></span> Electric Heat</label>
+            <label class="circuit-item"><input type="checkbox" value="1500" data-label="Heat Pump"> <span class="circuit-check"></span> Heat Pump</label>
+            <label class="circuit-item"><input type="checkbox" value="1000" data-label="Well Pump"> <span class="circuit-check"></span> Well Pump</label>
+            <label class="circuit-item"><input type="checkbox" value="1500" data-label="Sump Pump"> <span class="circuit-check"></span> Sump Pump</label>
+            <label class="circuit-item"><input type="checkbox" value="800" data-label="Refrigerator"> <span class="circuit-check"></span> Refrigerator</label>
+            <label class="circuit-item"><input type="checkbox" value="400" data-label="Freezer"> <span class="circuit-check"></span> Freezer</label>
+            <label class="circuit-item"><input type="checkbox" value="5000" data-label="Electric Range"> <span class="circuit-check"></span> Electric Range</label>
+            <label class="circuit-item"><input type="checkbox" value="5500" data-label="Electric Dryer"> <span class="circuit-check"></span> Electric Dryer</label>
+            <label class="circuit-item"><input type="checkbox" value="4500" data-label="Electric Water Heater"> <span class="circuit-check"></span> Water Heater</label>
+            <label class="circuit-item"><input type="checkbox" value="2000" data-label="Pool/Spa Pump"> <span class="circuit-check"></span> Pool / Spa Pump</label>
+            <label class="circuit-item"><input type="checkbox" value="1800" data-label="Garage Door + Lights"> <span class="circuit-check"></span> Garage</label>
+            <label class="circuit-item"><input type="checkbox" value="500" data-label="Security System"> <span class="circuit-check"></span> Security System</label>
+            <label class="circuit-item"><input type="checkbox" value="2000" data-label="Home Office"> <span class="circuit-check"></span> Home Office</label>
+            <label class="circuit-item"><input type="checkbox" value="1500" data-label="Kitchen Essentials"> <span class="circuit-check"></span> Kitchen Essentials</label>
+            <label class="circuit-item"><input type="checkbox" value="7200" data-label="EV Charger"> <span class="circuit-check"></span> EV Charger</label>
+            <label class="circuit-item"><input type="checkbox" value="2000" data-label="General Lighting"> <span class="circuit-check"></span> Lighting (whole home)</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Coverage Preference</label>
+          <div class="urgency-row">
+            <button class="urgency-btn" data-coverage="essential" onclick="selectCoverage(this)">
+              Essentials Only
+            </button>
+            <button class="urgency-btn selected" data-coverage="managed" onclick="selectCoverage(this)">
+              Managed Whole Home
+            </button>
+            <button class="urgency-btn" data-coverage="full" onclick="selectCoverage(this)">
+              Full Whole Home
+            </button>
+          </div>
+        </div>
+        <button class="submit-btn gold-btn" onclick="calculateGenerator()">
+          &#9879; Calculate My Generator
+        </button>
+        <!-- RESULTS -->
+        <div id="sizing-results" class="results-panel" style="display:none;">
+          <div class="result-header">
+            <h3>Your Recommendation</h3>
+            <div id="load-summary" class="load-summary"></div>
+          </div>
+          <div id="recommended-gen" class="gen-card recommended"></div>
+          <div id="alt-gen" class="gen-card alt"></div>
+          <div class="package-breakdown">
+            <h4>Typical Installation Package</h4>
+            <div id="package-items"></div>
+            <div id="package-total" class="package-total"></div>
+          </div>
+          <div class="form-group" style="margin-top:20px;">
+            <label>Your Name</label>
+            <input type="text" id="gen-name" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="gen-phone" placeholder="(720) 555-0000">
+          </div>
+          <button class="submit-btn" onclick="submitGeneratorLead()">
+            Request My Quote &#10148;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAINTENANCE SCREEN -->
+    <div id="screen-maintenance" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" onclick="navigateTo('home')">&larr;</button>
+        <h2>Generator Maintenance</h2>
+      </div>
+      <div class="screen-body">
+        <p class="section-intro">Keep your Generac running strong. Select a service below.</p>
+        <div class="maint-list">
+          <div class="maint-card" onclick="selectMaintService('annual')">
+            <div class="maint-info">
+              <strong>Annual Maintenance Service</strong>
+              <p>Oil change, filter, spark plugs, full inspection</p>
+            </div>
+            <div class="maint-price">$253.62</div>
+          </div>
+          <div class="maint-card" onclick="selectMaintService('battery')">
+            <div class="maint-info">
+              <strong>Battery Replacement</strong>
+              <p>Replace generator starting battery</p>
+            </div>
+            <div class="maint-price">$167.29</div>
+          </div>
+          <div class="maint-card" onclick="selectMaintService('wifi')">
+            <div class="maint-info">
+              <strong>WiFi Module Installation</strong>
+              <p>Remote monitoring via Generac Mobile Link</p>
+            </div>
+            <div class="maint-price">$303.21</div>
+          </div>
+          <div class="maint-card" onclick="selectMaintService('load-shed')">
+            <div class="maint-info">
+              <strong>Load Shedding Module</strong>
+              <p>Smart load management for smaller generators</p>
+            </div>
+            <div class="maint-price">$684.82</div>
+          </div>
+          <div class="maint-card" onclick="selectMaintService('warranty')">
+            <div class="maint-info">
+              <strong>Extended Warranty Processing</strong>
+              <p>Extend your Generac coverage</p>
+            </div>
+            <div class="maint-price">$105.00</div>
+          </div>
+          <div class="maint-card" onclick="selectMaintService('repair')">
+            <div class="maint-info">
+              <strong>Repair / Troubleshooting</strong>
+              <p>Generator not running? We'll diagnose it.</p>
+            </div>
+            <div class="maint-price">Call for quote</div>
+          </div>
+        </div>
+        <div id="maint-form" style="display:none;" class="maint-form-section">
+          <h3 id="maint-service-name"></h3>
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="maint-name" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="maint-phone" placeholder="(720) 555-0000">
+          </div>
+          <div class="form-group">
+            <label>Generator Model (if known)</label>
+            <input type="text" id="maint-model" placeholder="e.g., Guardian 22kW">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="maint-address" placeholder="Service address">
+          </div>
+          <div class="form-group">
+            <label>Notes (optional)</label>
+            <textarea id="maint-notes" placeholder="Any details about the issue..." rows="2"></textarea>
+          </div>
+          <button class="submit-btn" onclick="submitMaintRequest()">
+            Book Service &#10148;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT SCREEN -->
+    <div id="screen-about" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" onclick="navigateTo('home')">&larr;</button>
+        <h2>About Phoenix Electric</h2>
+      </div>
+      <div class="screen-body">
+        <div class="about-card">
+          <h3>&#128293; Phoenix Electric LLC</h3>
+          <p>Top 1% Colorado Electrical Contractor (BuildZoom verified). Authorized Generac Sales, Installation &amp; Service Dealer.</p>
+        </div>
+        <div class="about-card">
+          <h3>&#128196; Licensed In 10+ Jurisdictions</h3>
+          <p>Colorado State #101501, Denver, Castle Rock, Centennial, Arvada, Parker, Westminster, Douglas County, Littleton, and more.</p>
+        </div>
+        <div class="about-card">
+          <h3>&#128205; Service Area</h3>
+          <p>Denver Metro and Northern Colorado. From Greeley to Elizabeth and everywhere in between. 174+ permitted projects since 2018.</p>
+        </div>
+        <div class="about-card">
+          <h3>&#128222; Contact</h3>
+          <p><strong>Phone:</strong> (720) 955-0284</p>
+          <p><strong>Office Manager:</strong> Stephanie Mowbray</p>
+          <p><strong>Team:</strong> 18 field electricians</p>
+        </div>
+        <div class="about-services">
+          <h3>What We Do</h3>
+          <div class="service-tags">
+            <span class="tag">Panel Upgrades</span>
+            <span class="tag">Whole-Home Rewiring</span>
+            <span class="tag">Generac Generators</span>
+            <span class="tag">EV Charger Install</span>
+            <span class="tag">Lighting Design</span>
+            <span class="tag">Ceiling Fans</span>
+            <span class="tag">Circuit Additions</span>
+            <span class="tag">Code Corrections</span>
+            <span class="tag">Commercial Electrical</span>
+            <span class="tag">New Construction</span>
+            <span class="tag">Remodel Wiring</span>
+            <span class="tag">Troubleshooting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div id="screen-success" class="screen">
+      <div class="success-content">
+        <div class="success-icon">&#10004;</div>
+        <h2>Request Submitted!</h2>
+        <p id="success-message">We'll be in touch shortly.</p>
+        <button class="action-btn primary" onclick="navigateTo('home')" style="margin-top:30px;">
+          <span class="btn-text"><strong>Back to Home</strong></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

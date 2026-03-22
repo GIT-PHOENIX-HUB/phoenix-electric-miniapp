@@ -5,7 +5,7 @@
 
 // Add to your express app on echo.phoenixelectric.life
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN; // Don't hardcode!
-const SHANE_CHAT_ID = '8357341666';
+const SHANE_CHAT_ID = process.env.NOTIFICATION_CHAT_ID;
 
 // Mini App submission endpoint
 app.post('/api/miniapp/submit', express.json(), async (req, res) => {

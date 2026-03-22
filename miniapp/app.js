@@ -20,13 +20,13 @@ if (tg.safeAreaInset) {
 
 // ── Generac Product Database (from your pricebook) ──
 const GENERATORS = [
-  { code: 'GEN_7KW',  model: '7kW Guardian',  kw: 7,  material: 2800, phoenix: 4277.28, list: 5988.19, labor: 16 },
-  { code: 'GEN_10KW', model: '10kW Guardian', kw: 10, material: 3200, phoenix: 4777.28, list: 6688.19, labor: 16 },
-  { code: 'GEN_14KW', model: '14kW Guardian', kw: 14, material: 4100, phoenix: 5999.44, list: 8399.22, labor: 18 },
-  { code: 'GEN_16KW', model: '16kW Guardian', kw: 16, material: 4500, phoenix: 6499.44, list: 9099.22, labor: 18 },
-  { code: 'GEN_20KW', model: '20kW Guardian', kw: 20, material: 5200, phoenix: 7471.60, list: 10460.24, labor: 20 },
-  { code: 'GEN_22KW', model: '22kW Guardian', kw: 22, material: 5800, phoenix: 8221.60, list: 11510.24, labor: 20 },
-  { code: 'GEN_24KW', model: '24kW Guardian', kw: 24, material: 6400, phoenix: 9068.76, list: 12696.26, labor: 22 }
+  { code: 'GEN_7KW',  model: '7kW Guardian',  kw: 7,  list: 5988.19, labor: 16 },
+  { code: 'GEN_10KW', model: '10kW Guardian', kw: 10, list: 6688.19, labor: 16 },
+  { code: 'GEN_14KW', model: '14kW Guardian', kw: 14, list: 8399.22, labor: 18 },
+  { code: 'GEN_16KW', model: '16kW Guardian', kw: 16, list: 9099.22, labor: 18 },
+  { code: 'GEN_20KW', model: '20kW Guardian', kw: 20, list: 10460.24, labor: 20 },
+  { code: 'GEN_22KW', model: '22kW Guardian', kw: 22, list: 11510.24, labor: 20 },
+  { code: 'GEN_24KW', model: '24kW Guardian', kw: 24, list: 12696.26, labor: 22 }
 ];
 
 const INSTALL_PACKAGE = [

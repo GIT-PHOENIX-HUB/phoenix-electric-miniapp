@@ -461,8 +461,9 @@ function sendToBot(data, successMessage) {
 }
 
 function getBackendUrl() {
-  // Production: your VPS gateway
-  // The Mini App will be served from this same domain
+  if (typeof CONFIG !== 'undefined' && CONFIG.apiBaseUrl) {
+    return CONFIG.apiBaseUrl;
+  }
   const currentHost = window.location.hostname;
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
     return 'http://localhost:3000';

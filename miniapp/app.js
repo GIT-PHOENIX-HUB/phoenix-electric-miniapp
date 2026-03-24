@@ -438,18 +438,19 @@ function sendToBot(data, successMessage) {
     if (response.ok) {
       showSuccess(successMessage);
     } else {
-      // Fallback: try sendData (works for keyboard button launches)
+      // Backend returned an error — try sendData as fallback (keyboard button launches only)
       try {
         tg.sendData(JSON.stringify(data));
         showSuccess(successMessage);
       } catch (e) {
-        tg.showAlert("Submitted! We have your request. If you don't hear back within 2 hours, call (720) 955-0284.");
-        showSuccess(successMessage);
+        // Both methods failed — tell the customer the truth
+        tg.showAlert('We couldn\'t submit your request right now. Please call us directly at (720) 955-0284.');
+        document.querySelectorAll('.submit-btn').forEach(btn => btn.classList.remove('loading'));
       }
     }
   })
   .catch(() => {
-    // Offline/error fallback: try sendData
+    // Network error — try sendData as fallback
     try {
       tg.sendData(JSON.stringify(data));
       showSuccess(successMessage);
@@ -498,9 +499,4 @@ tg.onEvent('viewportChanged', (event) => {
 // tg.MainButton.setText('Submit Request');
 // tg.MainButton.show();
 
-// ── Console log for debugging ──
-console.log('[Phoenix Mini App] Initialized');
-console.log('[Phoenix Mini App] Start param:', startParam);
-console.log('[Phoenix Mini App] Chat type:', chatType);
-console.log('[Phoenix Mini App] User:', userName);
-console.log('[Phoenix Mini App] Platform:', tg.platform);
+// Debug logging removed for production — use browser DevTools if needed

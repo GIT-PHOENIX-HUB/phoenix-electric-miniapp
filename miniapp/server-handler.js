@@ -3,18 +3,46 @@
    Add this route to your gateway server
    ============================================= */
 
+import crypto from 'crypto';
+
 // Add to your express app on echo.phoenixelectric.life
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN; // Don't hardcode!
-const SHANE_CHAT_ID = '8357341666';
+const SHANE_CHAT_ID = process.env.NOTIFICATION_CHAT_ID;
+
+/**
+ * Validate Telegram Mini App initData using HMAC-SHA256.
+ * See: https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+ */
+function validateTelegramInitData(initData, botToken) {
+  if (!initData || !botToken) return false;
+
+  const params = new URLSearchParams(initData);
+  const hash = params.get('hash');
+  if (!hash) return false;
+
+  params.delete('hash');
+  const dataCheckString = Array.from(params.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, val]) => `${key}=${val}`)
+    .join('\n');
+
+  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
+  const computedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+
+  return computedHash === hash;
+}
 
 // Mini App submission endpoint
 app.post('/api/miniapp/submit', express.json(), async (req, res) => {
   try {
-    const data = req.body;
+    // Validate Telegram initData — reject unauthenticated requests
+    const initData = req.headers['x-telegram-init-data'];
+    if (!validateTelegramInitData(initData, BOT_TOKEN)) {
+      console.warn('[MiniApp] Rejected request: invalid or missing Telegram initData');
+      return res.status(403).json({ error: 'Invalid Telegram authentication' });
+    }
 
-    // Validate Telegram initData (optional but recommended)
-    // const initData = req.headers['x-telegram-init-data'];
-    // validateTelegramData(initData, BOT_TOKEN);
+    const data = req.body;
 
     // Format notification message
     let message = '';

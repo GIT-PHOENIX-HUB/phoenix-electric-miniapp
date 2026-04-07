@@ -20,13 +20,13 @@ if (tg.safeAreaInset) {
 
 // ── Generac Product Database (from your pricebook) ──
 const GENERATORS = [
-  { code: 'GEN_7KW',  model: '7kW Guardian',  kw: 7,  material: 2800, phoenix: 4277.28, list: 5988.19, labor: 16 },
-  { code: 'GEN_10KW', model: '10kW Guardian', kw: 10, material: 3200, phoenix: 4777.28, list: 6688.19, labor: 16 },
-  { code: 'GEN_14KW', model: '14kW Guardian', kw: 14, material: 4100, phoenix: 5999.44, list: 8399.22, labor: 18 },
-  { code: 'GEN_16KW', model: '16kW Guardian', kw: 16, material: 4500, phoenix: 6499.44, list: 9099.22, labor: 18 },
-  { code: 'GEN_20KW', model: '20kW Guardian', kw: 20, material: 5200, phoenix: 7471.60, list: 10460.24, labor: 20 },
-  { code: 'GEN_22KW', model: '22kW Guardian', kw: 22, material: 5800, phoenix: 8221.60, list: 11510.24, labor: 20 },
-  { code: 'GEN_24KW', model: '24kW Guardian', kw: 24, material: 6400, phoenix: 9068.76, list: 12696.26, labor: 22 }
+  { code: 'GEN_7KW',  model: '7kW Guardian',  kw: 7,  list: 5988.19, labor: 16 },
+  { code: 'GEN_10KW', model: '10kW Guardian', kw: 10, list: 6688.19, labor: 16 },
+  { code: 'GEN_14KW', model: '14kW Guardian', kw: 14, list: 8399.22, labor: 18 },
+  { code: 'GEN_16KW', model: '16kW Guardian', kw: 16, list: 9099.22, labor: 18 },
+  { code: 'GEN_20KW', model: '20kW Guardian', kw: 20, list: 10460.24, labor: 20 },
+  { code: 'GEN_22KW', model: '22kW Guardian', kw: 22, list: 11510.24, labor: 20 },
+  { code: 'GEN_24KW', model: '24kW Guardian', kw: 24, list: 12696.26, labor: 22 }
 ];
 
 const INSTALL_PACKAGE = [
@@ -438,18 +438,19 @@ function sendToBot(data, successMessage) {
     if (response.ok) {
       showSuccess(successMessage);
     } else {
-      // Fallback: try sendData (works for keyboard button launches)
+      // Backend returned an error — try sendData as fallback (keyboard button launches only)
       try {
         tg.sendData(JSON.stringify(data));
         showSuccess(successMessage);
       } catch (e) {
-        tg.showAlert("Submitted! We have your request. If you don't hear back within 2 hours, call (720) 955-0284.");
-        showSuccess(successMessage);
+        // Both methods failed — tell the customer the truth
+        tg.showAlert('We couldn\'t submit your request right now. Please call us directly at (720) 955-0284.');
+        document.querySelectorAll('.submit-btn').forEach(btn => btn.classList.remove('loading'));
       }
     }
   })
   .catch(() => {
-    // Offline/error fallback: try sendData
+    // Network error — try sendData as fallback
     try {
       tg.sendData(JSON.stringify(data));
       showSuccess(successMessage);
@@ -461,8 +462,9 @@ function sendToBot(data, successMessage) {
 }
 
 function getBackendUrl() {
-  // Production: your VPS gateway
-  // The Mini App will be served from this same domain
+  if (typeof CONFIG !== 'undefined' && CONFIG.apiBaseUrl) {
+    return CONFIG.apiBaseUrl;
+  }
   const currentHost = window.location.hostname;
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
     return 'http://localhost:3000';
@@ -497,9 +499,4 @@ tg.onEvent('viewportChanged', (event) => {
 // tg.MainButton.setText('Submit Request');
 // tg.MainButton.show();
 
-// ── Console log for debugging ──
-console.log('[Phoenix Mini App] Initialized');
-console.log('[Phoenix Mini App] Start param:', startParam);
-console.log('[Phoenix Mini App] Chat type:', chatType);
-console.log('[Phoenix Mini App] User:', userName);
-console.log('[Phoenix Mini App] Platform:', tg.platform);
+// Debug logging removed for production — use browser DevTools if needed

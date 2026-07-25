@@ -467,7 +467,7 @@ function getBackendUrl() {
   }
   const currentHost = window.location.hostname;
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-    return 'http://localhost:3000';
+    return 'http://localhost:18790';
   }
   return 'https://echo.phoenixelectric.life';
 }

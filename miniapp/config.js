@@ -5,7 +5,7 @@ const CONFIG = {
   botUsername: 'PhoenixEchoBot',
   apiBaseUrl: (() => {
     const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
+    if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:18790';
     return 'https://echo.phoenixelectric.life';
   })(),
   company: {

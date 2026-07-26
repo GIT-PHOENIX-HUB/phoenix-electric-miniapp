@@ -472,6 +472,72 @@ function getBackendUrl() {
   return 'https://echo.phoenixelectric.life';
 }
 
+// ─── Customer chat (rides the echo-bot hub: POST /api/miniapp/chat) ─────────
+function chatSessionId() {
+  let sid = null;
+  try { sid = localStorage.getItem('phoenix-chat-session'); } catch (e) { /* private mode */ }
+  if (!sid) {
+    sid = 'web-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    try { localStorage.setItem('phoenix-chat-session', sid); } catch (e) { /* keep in-memory */ }
+  }
+  return sid;
+}
+
+function appendChatBubble(text, who) {
+  const list = document.getElementById('chat-messages');
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble ' + who;
+  bubble.textContent = text;
+  list.appendChild(bubble);
+  list.scrollTop = list.scrollHeight;
+  return bubble;
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send');
+  const typing = document.getElementById('chat-typing');
+  const message = (input.value || '').trim();
+  if (!message || sendBtn.disabled) return;
+
+  appendChatBubble(message, 'user');
+  input.value = '';
+  sendBtn.disabled = true;
+  typing.style.display = 'block';
+
+  fetch(getBackendUrl() + '/api/miniapp/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: message, sessionId: chatSessionId() })
+  })
+    .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
+    .then(function (r) {
+      const reply = r.ok && r.j && r.j.data && r.j.data.response;
+      if (reply) {
+        appendChatBubble(String(reply), 'ai');
+      } else {
+        appendChatBubble('We couldn\'t answer right now. Please call us at (720) 955-0284 and a real person will help.', 'ai error');
+      }
+    })
+    .catch(function () {
+      appendChatBubble('Connection issue — please try again, or call us at (720) 955-0284.', 'ai error');
+    })
+    .finally(function () {
+      sendBtn.disabled = false;
+      typing.style.display = 'none';
+      input.focus();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); }
+    });
+  }
+});
+
 function showSuccess(message) {
   document.querySelectorAll('.submit-btn').forEach(btn => btn.classList.remove('loading'));
   document.getElementById('success-message').textContent = message;

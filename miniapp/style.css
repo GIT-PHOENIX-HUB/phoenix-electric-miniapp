@@ -834,3 +834,18 @@ body.tg-theme-light textarea {
   border-color: #ddd;
   color: #1a1a1a;
 }
+
+
+/* ─── Customer chat ─────────────────────────────────────────────────────── */
+.chat-body { display: flex; flex-direction: column; height: calc(100vh - 70px); padding-bottom: 12px; }
+.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 12px 4px; }
+.chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: var(--radius); font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+.chat-bubble.user { align-self: flex-end; background: var(--phoenix-red-dark); color: var(--text); border-bottom-right-radius: 4px; }
+.chat-bubble.ai { align-self: flex-start; background: var(--surface); color: var(--text); border: 1px solid var(--surface-hover); border-bottom-left-radius: 4px; }
+.chat-bubble.error { border-color: var(--danger); color: var(--text-muted); }
+.chat-typing { font-size: 12px; color: var(--text-muted); font-style: italic; padding: 2px 8px; }
+.chat-input-row { display: flex; gap: 8px; padding-top: 8px; }
+.chat-input-row input { flex: 1; background: var(--surface); border: 1px solid var(--surface-hover); border-radius: var(--radius); color: var(--text); padding: 12px 14px; font-size: 15px; outline: none; }
+.chat-input-row input:focus { border-color: var(--gold); }
+.chat-send-btn { background: var(--phoenix-red); color: #fff; border: none; border-radius: var(--radius); width: 48px; font-size: 18px; cursor: pointer; transition: background 0.2s; }
+.chat-send-btn:disabled { background: var(--surface-hover); cursor: default; }

@@ -56,6 +56,14 @@
           </span>
           <span class="btn-arrow">&rsaquo;</span>
         </button>
+        <button class="action-btn secondary" onclick="navigateTo('chat')">
+          <span class="btn-icon">&#128172;</span>
+          <span class="btn-text">
+            <strong>Ask a Question</strong>
+            <small>Chat with us — estimates, scheduling, anything</small>
+          </span>
+          <span class="btn-arrow">&rsaquo;</span>
+        </button>
         <button class="action-btn outline" onclick="navigateTo('about')">
           <span class="btn-icon">&#9737;</span>
           <span class="btn-text">
@@ -371,6 +379,24 @@
     </div>
 
     <!-- SUCCESS SCREEN -->
+    <!-- CHAT SCREEN -->
+    <div id="screen-chat" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" onclick="navigateTo('home')">&larr;</button>
+        <h2>Ask Phoenix Electric</h2>
+      </div>
+      <div class="screen-body chat-body">
+        <div id="chat-messages" class="chat-messages">
+          <div class="chat-bubble ai">Hi! Ask us about service, estimates, scheduling, or your generator — a real person reviews anything we can't answer.</div>
+        </div>
+        <div id="chat-typing" class="chat-typing" style="display:none;">Phoenix is typing&hellip;</div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Type your question..." autocomplete="off" enterkeyhint="send" />
+          <button id="chat-send" class="chat-send-btn" onclick="sendChatMessage()">&#10148;</button>
+        </div>
+      </div>
+    </div>
+
     <div id="screen-success" class="screen">
       <div class="success-content">
         <div class="success-icon">&#10004;</div>

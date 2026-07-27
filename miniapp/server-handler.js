@@ -32,16 +32,25 @@ function validateTelegramInitData(initData, botToken) {
   return computedHash === hash;
 }
 
+function requireTelegramMiniAppAuth(req, res, next) {
+  const initData = req.headers['x-telegram-init-data'];
+  if (!validateTelegramInitData(initData, BOT_TOKEN)) {
+    console.warn('[MiniApp] Rejected request: invalid or missing Telegram initData');
+    return res.status(403).json({ error: 'Invalid Telegram authentication' });
+  }
+  next();
+}
+
+// Install authentication before every Mini App write route, including the
+// chat handler supplied by the echo-bot hub.
+app.use(
+  ['/api/miniapp/submit', '/api/miniapp/chat'],
+  requireTelegramMiniAppAuth
+);
+
 // Mini App submission endpoint
 app.post('/api/miniapp/submit', express.json(), async (req, res) => {
   try {
-    // Validate Telegram initData — reject unauthenticated requests
-    const initData = req.headers['x-telegram-init-data'];
-    if (!validateTelegramInitData(initData, BOT_TOKEN)) {
-      console.warn('[MiniApp] Rejected request: invalid or missing Telegram initData');
-      return res.status(403).json({ error: 'Invalid Telegram authentication' });
-    }
-
     const data = req.body;
 
     // Format notification message

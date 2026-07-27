@@ -473,14 +473,19 @@ function getBackendUrl() {
 }
 
 // ─── Customer chat (rides the echo-bot hub: POST /api/miniapp/chat) ─────────
+let inMemoryChatSessionId = null;
+
 function chatSessionId() {
+  if (inMemoryChatSessionId) return inMemoryChatSessionId;
+
   let sid = null;
   try { sid = localStorage.getItem('phoenix-chat-session'); } catch (e) { /* private mode */ }
   if (!sid) {
     sid = 'web-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
     try { localStorage.setItem('phoenix-chat-session', sid); } catch (e) { /* keep in-memory */ }
   }
-  return sid;
+  inMemoryChatSessionId = sid;
+  return inMemoryChatSessionId;
 }
 
 function appendChatBubble(text, who) {
@@ -507,7 +512,10 @@ function sendChatMessage() {
 
   fetch(getBackendUrl() + '/api/miniapp/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Telegram-Init-Data': tg.initData || ''
+    },
     body: JSON.stringify({ message: message, sessionId: chatSessionId() })
   })
     .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
@@ -533,7 +541,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('chat-input');
   if (input) {
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); sendChatMessage(); }
+      if (e.key === 'Enter' && !e.isComposing) {
+        e.preventDefault();
+        sendChatMessage();
+      }
     });
   }
 });
